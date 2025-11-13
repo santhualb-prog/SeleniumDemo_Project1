@@ -1,29 +1,48 @@
-name: Run UI Tests
+name: OrangeHRM Automation CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]        # Run on push to main branch
   pull_request:
-    branches: [ main ]
+    branches: [ main ]        # Run on PR to main branch
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build-and-test:
+    runs-on: windows-latest    # Windows runner needed for ChromeDriver
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # Step 1: Checkout the repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      # Step 2: Setup .NET
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 9.0.x
 
-      - name: Install dependencies
+      # Step 3: Restore dependencies
+      - name: Restore NuGet packages
         run: dotnet restore
 
-      - name: Build project
-        run: dotnet build --no-restore
+      # Step 4: Build solution
+      - name: Build solution
+        run: dotnet build --configuration Release
 
-      - name: Run tests
-        run: dotnet test --logger "html;LogFileName=TestResult.html"
+      # Step 5: Run tests
+      - name: Run NUnit Tests
+        run: dotnet test --logger "trx;LogFileName=test_results.trx"
+
+      # Step 6: Upload NUnit test results
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: '**/test_results.trx'
+
+      # Step 7: Upload ExtentReports
+      - name: Upload ExtentReport
+        uses: actions/upload-artifact@v3
+        with:
+          name: ExtentReport
+          path: Reports/TestReport.html
