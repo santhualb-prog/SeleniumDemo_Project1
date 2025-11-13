@@ -17,7 +17,7 @@ jobs:
 
       # Step 2: Setup .NET
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v3.1.2
         with:
           dotnet-version: 9.0.x
 
