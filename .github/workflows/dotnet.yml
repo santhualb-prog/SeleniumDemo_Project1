@@ -17,7 +17,7 @@ jobs:
 
       # Step 2: Setup .NET
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3.1.2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 9.0.x
 
@@ -35,14 +35,14 @@ jobs:
 
       # Step 6: Upload NUnit test results
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TestResults
           path: '**/test_results.trx'
 
       # Step 7: Upload ExtentReports
       - name: Upload ExtentReport
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ExtentReport
           path: Reports/TestReport.html
